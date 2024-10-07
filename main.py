@@ -1,8 +1,9 @@
 from DFA import DFA
 from State import State
+from Transition import Transition
 def makeDfa( substring):
-        print("Running make dfa")
-        numStates = len(substring)
+        # print("Running make dfa")
+        numStates = len(substring) + 1
         states = []
         for i in range(numStates): 
             if (i == 0): 
@@ -11,10 +12,18 @@ def makeDfa( substring):
                 states.append(State((f"q_{i}"), False, False, 'self', 'self' )); 
             else: 
                 states.append(State((f"q_{i}"), False, True, 'self', 'self' )); 
-        for i in range(numStates): 
-            print(states[i].toDict())
+        # for i in range(numStates): 
+        #     #print(states[i].toDict())
         dfa = DFA(states)
-        dfa.invertDFA()
+        print(len(dfa.states))
+        # dfa.invertDFA()
+        for i in range(len(dfa.states)): 
+            dfa.states[i].toDict()
+        print(substring)
+        Transition.buildTransitions(dfa.states, substring)
+
+        
+
 
         
 def main(): 

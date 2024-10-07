@@ -14,7 +14,7 @@ class State:
         self.dest = dest
     def toDict(self):
         print("State name", self.name)
-        print("Is start?: ", self.isStart)
-        print("Is Accept?: ", self.isAccept)
-        print("Origin", self.origin)
-        print("Dest", self.dest)
+        # print("Is start?: ", self.isStart)
+        # print("Is Accept?: ", self.isAccept)
+        # print("Origin", self.origin)
+        # print("Dest", self.dest)

@@ -19,4 +19,4 @@ class DFA:
         numStates = len(self.states)
         for i in range(numStates): 
              obj = self.states[i]
-             print(obj.toDict())
+            # print(obj.toDict())
