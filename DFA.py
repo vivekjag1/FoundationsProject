@@ -1,3 +1,4 @@
+from State import State 
 class DFA: 
     '''
     A dfa is a 5 tuple 
@@ -10,4 +11,9 @@ class DFA:
     def __init__(self, states, transitionValues): 
         self.states = states 
         self.transitionValues = transitionValues
+
+    
+    
+
+
     
