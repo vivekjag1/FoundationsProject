@@ -1,4 +1,3 @@
 ## Todo 
-1. Convert input regex to DFA 
-2. Do GNA rip recursivley 
-3. Return resulting regex 
+1. Do GNA rip recursivley 
+2. Return resulting regex 

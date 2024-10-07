@@ -13,9 +13,10 @@ def makeDfa( substring):
                 states.append(State((f"q_{i}"), False, True, 'self', 'self' )); 
         for i in range(numStates): 
             print(states[i].toDict())
+        dfa = DFA(states)
+        dfa.invertDFA()
 
-
-            
+        
 def main(): 
     #1: Get the input from the user
     substring = input("Enter the substring that should not appear:"); 
