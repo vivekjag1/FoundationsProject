@@ -7,11 +7,13 @@ def makeDfa( substring):
         for i in range(numStates): 
             if (i == 0): 
                 states.append(State((f"q_{i}"), True, False, 'self', 'self' )); 
-            elif (i!=numStates): 
+            elif (i!=numStates -1): 
                 states.append(State((f"q_{i}"), False, False, 'self', 'self' )); 
             else: 
                 states.append(State((f"q_{i}"), False, True, 'self', 'self' )); 
-        print(states)
+        for i in range(numStates): 
+            print(states[i].toDict())
+
 
             
 def main(): 
