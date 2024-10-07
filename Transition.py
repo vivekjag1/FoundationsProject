@@ -1,3 +1,4 @@
+from allSame import allSame, allSameToIndex
 class Transition: 
     def __init__(self, states): 
         self.states = states
@@ -11,49 +12,59 @@ class Transition:
         3. if next char 
             move to next state
         '''
+        '''
+        1110 
 
+
+        q0 q1 q2 q3 q4 q5
 
         '''
-        111 
+        # prevChar = ''
+        # allSame = True
 
-        q1 q2 q3 q4
-        
-        '''
-        for i in range(len(states)): 
-     
-            
+
+
+
+
+        for i in range(len(states)):     
             '''
             [move if 0 is read, move if 1 is read]
             '''
-
             next = -1
             if(i + 1 != len(states)):
                 next = i+1
             else: 
                 next = i
-
-            #if i+1 is out of range
-                #just set it to trap 
-            #otherwise 
-                #next index is next
-            if(i == len(states) -1 ): 
+            if(i == len(states) - 1 ): 
+                #if on the last state, trap and transition to yourself no matter what
                 transition = [states[i], states[i]] 
                 allTransitions.append(transition)
-                print("i is", i)
                 for i in range(len(allTransitions)): 
                     for x in range(len(allTransitions[i])): 
                         allTransitions[i][x].toDict() 
-
                 return 
-            
-            if(substring[i] == '0'): 
-                transition = [states[next], states[i]]
-                allTransitions.append(transition)
-            else: 
-                transition = [states[i], states[next]]
-                allTransitions.append(transition)
-        
 
+            if(allSameToIndex(substring, i) and i== len(substring) -1):
+                transition = [states[i], states[0]]
+                for i in range(len(allTransitions)): 
+                    for x in range(len(allTransitions[i])): 
+                        allTransitions[i][x].toDict() 
+                return 
+            elif (allSameToIndex(substring, i) and i != len(substring) -1 and substring[i] != substring[i+1]): 
+                transition = [states[i+1], states[i]]
+                allTransitions.append(transition)
+            elif (allSameToIndex(substring, i) and i != len(substring) -1 and substring[i] == substring[i+1]): 
+                transition = [states[i], states[i+1] ]
+                allTransitions.append(transition)
+                 
+            else: 
+                if(substring[i] == '0'): 
+                    transition = [states[next], states[i]]
+                    allTransitions.append(transition)
+                else: 
+                    transition = [states[i], states[next]]
+                    allTransitions.append(transition)
+            
         return 
     
 

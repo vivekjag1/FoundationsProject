@@ -17,9 +17,8 @@ def makeDfa( substring):
         dfa = DFA(states)
         print(len(dfa.states))
         # dfa.invertDFA()
-        for i in range(len(dfa.states)): 
-            dfa.states[i].toDict()
-        print(substring)
+        # for i in range(len(dfa.states)): 
+        #     dfa.states[i].toDict()
         Transition.buildTransitions(dfa.states, substring)
 
         
