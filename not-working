@@ -51,7 +51,7 @@ class Transition:
                 transition = [states[i], states[i]]
                 allTransitions.append(transition)
                 printThings(allTransitions)
-                return 
+                return allTransitions
             # If all the characters are the same so far
             if(allSameToIndex(i, substring)):
                 #  If the next one changes then the transition is 
@@ -106,4 +106,4 @@ class Transition:
                     transition = [states[next], states[0]]
                     allTransitions.append(transition)
                     print(transition[0].name, transition[1].name)
-        return
+        return allTransitions

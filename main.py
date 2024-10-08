@@ -1,33 +1,59 @@
 from DFA import DFA
 from State import State
 from Transition import Transition
+from Transition import printThings
 def makeDfa( substring):
         # print("Running make dfa")
         numStates = len(substring) + 1
         states = []
         for i in range(numStates): 
             if (i == 0): 
-                states.append(State((f"q_{i}"), True, False, 'self', 'self' )); 
+                states.append(State((f"q_{i + 1}"), True, False, 'self', 'self' )); 
             elif (i!=numStates -1): 
-                states.append(State((f"q_{i}"), False, False, 'self', 'self' )); 
+                states.append(State((f"q_{i + 1}"), False, False, 'self', 'self' )); 
             else: 
-                states.append(State((f"q_{i}"), False, True, 'self', 'self' )); 
+                states.append(State((f"q_{i + 1}"), False, True, 'self', 'self' )); 
         # for i in range(numStates): 
         #     #print(states[i].toDict())
         dfa = DFA(states)
+
         print(len(dfa.states))
         # dfa.invertDFA()
-        for i in range(len(dfa.states)): 
-            dfa.states[i].toDict()
-        print(substring)
+        # for i in range(len(dfa.states)): 
+        #     dfa.states[i].toDict()
+        # print(substring)
 
-        print("\nTHIS IS THE TRANSITION FUNCTION")
-        Transition.buildTransitions(dfa.states, substring)
+        # print("\nTHIS IS THE TRANSITION FUNCTION")
+        # allNewTransition = Transition.buildTransitions(dfa.states, substring)
+        return states 
+    
+
+def buildGNFA(states, transitions):
+    # Add new start state
+    state = State((f"q_{0}"), True, False, 'self', 'self' )
+    states.insert(0, state)
+    # Edit old start state to now make it normal state
+    oldStart = states[1]
+    oldStart.isStart = False
+    states[1] = oldStart
+    # Make new transition for new start state
+    transitions.insert(0, [None, None, states[1]])
+    return transitions
+
+
+
+
         
+def printThings(allTransitions):
+    for i in range(len(allTransitions)): 
+                    for x in range(len(allTransitions[i])): 
+                        if(allTransitions[i][x] == None):
+                             print("None")
+                        else:
+                            allTransitions[i][x].toDict()
 
 
         
-
 
         
 def main(): 
@@ -36,15 +62,21 @@ def main():
     #2: Parse input to make sure that there are no zeros and ones 
     if all(ch in "01" for ch in substring): 
        #Create DFA
-    #    newDFA = DFA()
-       makeDfa(substring)
-
+       newDFA = makeDfa(substring)
+        # Build Transitions
+       Transitions = Transition.buildTransitions(newDFA, substring)
+    #    print("krishna has a shit computer", Transition.buildTransitions(newDFA, substring))
+    #    build the GNFA
+       thingy = buildGNFA(newDFA, Transitions)
+       print(thingy)
+       printThings(thingy)
+    #    Transition.printThings(Transitions)
+       
     else: 
         print("Invalid string!")
-        
+    
         return 
 
 main()
 
 
-        
