@@ -96,6 +96,13 @@ def crushGNFA(states, transitions):
      if(arr != "Fail"):
           acc = acc + arr[0] + "* "
           print("Accumulate this shit asshole " + acc)
+     if(arr == "Fail"):
+          acc = acc + pivot.name
+          print("Accumulate this shit asshole 2 " + acc)
+     
+     del states[1]
+     del transitions[1]
+     crushGNFA(states, transitions)
 
 def idLoop(state, transition):
      arr = ["0", "1", "E"]
