@@ -1,13 +1,10 @@
 #Checks if the characters to a certain point of the index are the same if not then we return false
 def allSameToIndex(index, substring):
-    # print("index is ", index)
-    # print("substring is ", substring)
     currChar = substring[0]
-    if(allSame(substring)):
+    if(allSame):
         return True
     
     for i in range(index + 1):
-        # print("substring i ", substring[i])
         if(currChar != substring[i]):
             return False
     return True
@@ -17,9 +14,8 @@ def allSame(substring):
     for i in range(len(substring)):
         if(currChar != substring[i]):
             return False
+    
     return True
-
-
 def printThings(allTransitions):
     for i in range(len(allTransitions)): 
                     for x in range(len(allTransitions[i])): 
@@ -59,13 +55,13 @@ class Transition:
             # If all the characters are the same so far
             if(allSameToIndex(i, substring)):
                 #  If the next one changes then the transition is 
-                 if(substring[i] == '0' and changeAllSame):
+                 if(substring[i] == '0' and substring[subnext] != '0'):
                     print("if allsame 1")
                     transition = [states[i], states[next]]
                     allTransitions.append(transition)
                     print(transition[0].name, transition[1].name)
 
-                 elif(substring[i] == '1' and changeAllSame):
+                 elif(substring[i] == '1' and substring[subnext] != '1'):
                     print("if allsame 2")
                     # print("Subnext is ", subnext)
                     # print("Next index values ", substring[subnext])
@@ -73,13 +69,13 @@ class Transition:
                     allTransitions.append(transition)
                     print(transition[0].name, transition[1].name)
                 
-                 elif(substring[i] == '1' and not changeAllSame):
+                 elif(substring[i] == '1' and substring[subnext] == '1'):
                     print("if allsame 3")
                     transition = [states[0], states[next]]
                     allTransitions.append(transition)
                     print(transition[0].name, transition[1].name)
                  
-                 elif(substring[i] == '0' and not changeAllSame):
+                 elif(substring[i] == '0' and substring[subnext] == '0'):
                     print("if allsame 4")
                     transition = [states[next], states[0]]
                     allTransitions.append(transition)
@@ -87,25 +83,25 @@ class Transition:
             
             if(not allSameToIndex(i, substring)):
                 #  If the next one changes then the transition is 
-                 if(substring[i] == '0' and changeAllSame):
+                 if(substring[i] == '0' and substring[subnext] != '0'):
                     print("if allnotsame 1")
-                    transition = [states[next], states[i]]
+                    transition = [states[0], states[next]]
                     allTransitions.append(transition)
                     print(transition[0].name, transition[1].name)
 
-                 elif(substring[i] == '1' and changeAllSame):
+                 elif(substring[i] == '1' and substring[subnext] != '1'):
                     print("if allnotsame 2")
-                    transition = [states[i], states[next]]
+                    transition = [states[next], states[0]]
                     allTransitions.append(transition)
                     print(transition[0].name, transition[1].name)
                 
-                 elif(substring[i] == '1' and not changeAllSame):
+                 elif(substring[i] == '1' and substring[subnext] == '1'):
                     print("if allnotsame 3")
                     transition = [states[0], states[next]]
                     allTransitions.append(transition)
                     print(transition[0].name, transition[1].name)
                  
-                 elif(substring[i] == '0' and not changeAllSame):
+                 elif(substring[i] == '0' and substring[subnext] == '0'):
                     print("if allnotsame 4")
                     transition = [states[next], states[0]]
                     allTransitions.append(transition)

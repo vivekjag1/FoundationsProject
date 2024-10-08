@@ -20,7 +20,11 @@ def makeDfa( substring):
         for i in range(len(dfa.states)): 
             dfa.states[i].toDict()
         print(substring)
+
+        print("\nTHIS IS THE TRANSITION FUNCTION")
         Transition.buildTransitions(dfa.states, substring)
+        
+
 
         
 
