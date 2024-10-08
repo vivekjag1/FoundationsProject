@@ -46,13 +46,20 @@ def buildGNFA(states, transitions):
 
     #iterate through the list of transitions and if we get to an accept state, make it non accpeting and add transition to this new state 
     for i in range(len(states) - 1): 
+         
          thisState = states[i]
+         print(i, "accept: ", thisState.isAccept)
+
+         if(not thisState.isAccept and (not thisState.isStart)): 
+              transitions[i].append(None)
     
          if(thisState.isAccept):
               print("At state at index", i)
               thisState.isAccept=False
               transitions[i].append(newAccept)
-    
+              
+        #  if(i == len(states) -1): 
+        #       transitions[i].append(None)
 
     return transitions
 
