@@ -3,6 +3,7 @@ from State import State
 from Transition import Transition
 from Transition import printThings
 from GNFA import GNFA
+import re
 def makeDfa( substring):
         numStates = len(substring) + 1
         states = []
@@ -89,16 +90,20 @@ def printStateInfo(allTransitions):
 def crushGNFA(states, transitions):
      acc = ""
      if(len(states) == 2):
-          return
+          return "(" + acc + ")*"
      pivot = states[1]
      currTrans = transitions[1]
      arr = idLoop(pivot, currTrans)
+    #  Has loops
      if(arr != "Fail"):
-          acc = acc + arr[0] + "* "
+          acc = acc + arr[1] + "* "
           print("Accumulate this shit asshole " + acc)
+        #   No loops
      if(arr == "Fail"):
-          acc = acc + pivot.name
-          print("Accumulate this shit asshole 2 " + acc)
+        #    In the case of failure you need to find the pointer to the next state
+           acc = acc + findNextTrans(pivot, currTrans)
+           
+           print("Accumulate this shit asshole 2 " + acc)
      
      del states[1]
      del transitions[1]
@@ -118,6 +123,19 @@ def idLoop(state, transition):
                return arrFinal
      return "Fail"
 
+
+def findNextTrans(state, transition):
+     arr = ['0', '1', 'None']
+     currentStateInd = findInt(state.name)
+     for i in range(len(transition)):
+          if(findInt(transition[i].name) > currentStateInd):
+               return arr[i]
+     return "Nah"
+          
+
+def findInt(string):
+     return int(re.search(r'\d+', string).group())
+     
 def main(): 
     #1: Get the input from the user
     substring = input("Enter the substring that should not appear:"); 
