@@ -3,7 +3,6 @@ from State import State
 from Transition import Transition
 from Transition import printThings
 def makeDfa( substring):
-        # print("Running make dfa")
         numStates = len(substring) + 1
         states = []
         for i in range(numStates): 
@@ -13,8 +12,7 @@ def makeDfa( substring):
                 states.append(State((f"q_{i + 1}"), False, False, 'self', 'self' )); 
             else: 
                 states.append(State((f"q_{i + 1}"), False, True, 'self', 'self' )); 
-        # for i in range(numStates): 
-        #     #print(states[i].toDict())
+
         dfa = DFA(states)
         dfa.invertDFA()
 
@@ -71,7 +69,7 @@ def buildGNFA(states, transitions):
     return transitions
 
         
-def printThings(allTransitions):
+def printStateInfo(allTransitions):
     print("Curr State  |  0  |   1  |  E  ")
     for i in range(len(allTransitions)):      
                 ind_1 = "None"
@@ -90,28 +88,22 @@ def printThings(allTransitions):
 # def crushGNFA(states):
 #      if(len(states) == 2):
 #           return
-        
 def main(): 
     #1: Get the input from the user
     substring = input("Enter the substring that should not appear:"); 
     #2: Parse input to make sure that there are no zeros and ones 
     if all(ch in "01" for ch in substring): 
        #Create DFA
-       newDFA = makeDfa(substring)
-        # Build Transitions
-       Transitions = Transition.buildTransitions(newDFA, substring)
-    #    print("krishna has a shit computer", Transition.buildTransitions(newDFA, substring))
-    #    build the GNFA
-       thingy = buildGNFA(newDFA, Transitions)
-       #print(thingy)
-       printThings(thingy)
-    #    Transition.printThings(Transitions)
-       
-    else: 
+       currentStates = makeDfa(substring)
+       # Build Transitions
+       Transitions = Transition.buildTransitions(currentStates, substring) #returns an array of arrays where each index of the array is in the form [state to move if 0 is read, state to move to if 1 is read]4
+       #build GNFA attaches a new start and accept state to the exiting dfa
+       mutatedTransitions = buildGNFA(currentStates, Transitions)
+       #this prints the current states and thier transitions       
+       printStateInfo(currentStates)
+    else: #the case that something other than 0 and 1 were added
         print("Invalid string!")
-    
-        return 
-
+        return  #exit
 main()
 
 
