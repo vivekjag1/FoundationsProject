@@ -16,6 +16,7 @@ def makeDfa( substring):
         # for i in range(numStates): 
         #     #print(states[i].toDict())
         dfa = DFA(states)
+        dfa.invertDFA()
 
         print(len(dfa.states))
         # dfa.invertDFA()
@@ -38,6 +39,21 @@ def buildGNFA(states, transitions):
     states[1] = oldStart
     # Make new transition for new start state
     transitions.insert(0, [None, None, states[1]])
+
+    #build new accept state 
+    newAccept = State("q_accept", False, True, 'self', 'self')
+    states.append(newAccept)
+
+    #iterate through the list of transitions and if we get to an accept state, make it non accpeting and add transition to this new state 
+    for i in range(len(states) - 1): 
+         thisState = states[i]
+    
+         if(thisState.isAccept):
+              print("At state at index", i)
+              thisState.isAccept=False
+              transitions[i].append(newAccept)
+    
+
     return transitions
 
 
@@ -68,7 +84,7 @@ def main():
     #    print("krishna has a shit computer", Transition.buildTransitions(newDFA, substring))
     #    build the GNFA
        thingy = buildGNFA(newDFA, Transitions)
-       print(thingy)
+       #print(thingy)
        printThings(thingy)
     #    Transition.printThings(Transitions)
        

@@ -54,7 +54,7 @@ class Transition:
             if(i == len(states) - 1):
                 transition = [states[i], states[i]]
                 allTransitions.append(transition)
-                printThings(allTransitions)
+                #printThings(allTransitions)
                 return allTransitions
             # If all the characters are the same so far
             if(allSameToIndex(i, substring)):
