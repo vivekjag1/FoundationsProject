@@ -2,6 +2,7 @@ from DFA import DFA
 from State import State
 from Transition import Transition
 from Transition import printThings
+from GNFA import GNFA
 def makeDfa( substring):
         numStates = len(substring) + 1
         states = []
@@ -65,8 +66,8 @@ def buildGNFA(states, transitions):
               
         #  if(i == len(states) -1): 
         #       transitions[i].append(None)
-
-    return transitions
+    retGNFA = GNFA(states, transitions)
+    return retGNFA
 
         
 def printStateInfo(allTransitions):
@@ -98,9 +99,9 @@ def main():
        # Build Transitions
        Transitions = Transition.buildTransitions(currentStates, substring) #returns an array of arrays where each index of the array is in the form [state to move if 0 is read, state to move to if 1 is read]4
        #build GNFA attaches a new start and accept state to the exiting dfa
-       mutatedTransitions = buildGNFA(currentStates, Transitions)
+       newGNFA = buildGNFA(currentStates, Transitions)
        #this prints the current states and thier transitions       
-       printStateInfo(currentStates)
+       printStateInfo(newGNFA.transitions)
     else: #the case that something other than 0 and 1 were added
         print("Invalid string!")
         return  #exit
