@@ -94,13 +94,17 @@ def crushGNFA(states, transitions):
      print(idLoop(pivot, currTrans))
 
 def idLoop(state, transition):
+     arr = ["0", "1", "E"]
+     arrFinal = []
      currName = state.name
     #  print("Current Name", currName)
      for i in range(len(transition)):
         #   print("I hate lfe", currName, transition[i].name)
           if(currName == transition[i].name):
             #    print("Transition index ", transition[i].name)
-               return currName
+               arrFinal.append(currName)
+               arrFinal.append(arr[i])
+               return arrFinal
      return "Fail"
 
 def main(): 
