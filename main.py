@@ -86,9 +86,23 @@ def printStateInfo(allTransitions):
 
 
         
-# def crushGNFA(states):
-#      if(len(states) == 2):
-#           return
+def crushGNFA(states, transitions):
+     if(len(states) == 2):
+          return
+     pivot = states[1]
+     currTrans = transitions[1]
+     print(idLoop(pivot, currTrans))
+
+def idLoop(state, transition):
+     currName = state.name
+    #  print("Current Name", currName)
+     for i in range(len(transition)):
+        #   print("I hate lfe", currName, transition[i].name)
+          if(currName == transition[i].name):
+            #    print("Transition index ", transition[i].name)
+               return currName
+     return "Fail"
+
 def main(): 
     #1: Get the input from the user
     substring = input("Enter the substring that should not appear:"); 
@@ -102,6 +116,8 @@ def main():
        newGNFA = buildGNFA(currentStates, Transitions)
        #this prints the current states and thier transitions       
        printStateInfo(newGNFA.transitions)
+
+       crushGNFA(newGNFA.states, newGNFA.transitions)
     else: #the case that something other than 0 and 1 were added
         print("Invalid string!")
         return  #exit
