@@ -87,11 +87,15 @@ def printStateInfo(allTransitions):
 
         
 def crushGNFA(states, transitions):
+     acc = ""
      if(len(states) == 2):
           return
      pivot = states[1]
      currTrans = transitions[1]
-     print(idLoop(pivot, currTrans))
+     arr = idLoop(pivot, currTrans)
+     if(arr != "Fail"):
+          acc = acc + arr[0] + "* "
+          print("Accumulate this shit asshole " + acc)
 
 def idLoop(state, transition):
      arr = ["0", "1", "E"]
