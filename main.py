@@ -31,7 +31,7 @@ def makeDfa( substring):
 
 def buildGNFA(states, transitions):
     # Add new start state
-    state = State((f"q_{0}"), True, False, 'self', 'self' )
+    state = State((f"q_{0}"), True, False, [None], [states[1]])
     states.insert(0, state)
     # Edit old start state to now make it normal state
     oldStart = states[1]
@@ -40,8 +40,15 @@ def buildGNFA(states, transitions):
     # Make new transition for new start state
     transitions.insert(0, [None, None, states[1]])
 
-    #build new accept state 
-    newAccept = State("q_accept", False, True, 'self', 'self')
+    #build new accept state
+    newStates = [] 
+    for j in range(len(states)):
+         if(j == 0 or j == len(states) - 1):
+              continue
+         else:
+              newStates.append(states[j])
+    # Will add every state pointing to accept except the start and original accept state
+    newAccept = State("q_accept", False, True, newStates, [None])
     states.append(newAccept)
 
     #iterate through the list of transitions and if we get to an accept state, make it non accpeting and add transition to this new state 
@@ -63,21 +70,26 @@ def buildGNFA(states, transitions):
 
     return transitions
 
-
-
-
         
 def printThings(allTransitions):
-    for i in range(len(allTransitions)): 
-                    for x in range(len(allTransitions[i])): 
-                        if(allTransitions[i][x] == None):
-                             print("None")
-                        else:
-                            allTransitions[i][x].toDict()
+    print("Curr State  |  0  |   1  |  E  ")
+    for i in range(len(allTransitions)):      
+                ind_1 = "None"
+                ind_2 = "None"
+                ind_3 = "None"
+                if(allTransitions[i][0] != None):
+                     ind_1 = allTransitions[i][0].toDict()
+                if(allTransitions[i][1] != None):
+                     ind_2 = allTransitions[i][1].toDict()
+                if(allTransitions[i][2] != None):
+                     ind_3 = allTransitions[i][2].toDict()
+                print(f"q{i}        ",ind_1, ind_2, ind_3)
 
 
         
-
+# def crushGNFA(states):
+#      if(len(states) == 2):
+#           return
         
 def main(): 
     #1: Get the input from the user

@@ -13,7 +13,8 @@ class State:
         self.origin = origin
         self.dest = dest
     def toDict(self):
-        print("State name", self.name)
+        return self.name
+        
         # print("Is start?: ", self.isStart)
         # print("Is Accept?: ", self.isAccept)
         # print("Origin", self.origin)
