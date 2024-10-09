@@ -74,11 +74,12 @@ def printStateInfo(allTransitions):
                 ind_1 = "None"
                 ind_2 = "None"
                 ind_3 = "None"
-                if(allTransitions[i][0] != None):
+
+                if(allTransitions[i][0] != None and allTransitions[i][0] != "None"):
                      ind_1 = allTransitions[i][0].toDict()
-                if(allTransitions[i][1] != None):
+                if(allTransitions[i][1] != None and allTransitions[i][1] != "None"):
                      ind_2 = allTransitions[i][1].toDict()
-                if(allTransitions[i][2] != None):
+                if(allTransitions[i][2] != None and allTransitions[i][2] != "None"):
                      ind_3 = allTransitions[i][2].toDict()
                 print(f"q{i}        ",ind_1, ind_2, ind_3)
 
@@ -92,31 +93,14 @@ def crushGNFA(states, transitions, acc):
            
      pivot = states[1]
      currTrans = transitions[1]
-     arr = idLoop(pivot, currTrans)
-    #  Has loops
-     if(arr != "Fail"):
-          #need to check if the current state has a transition to an accept state 
-          index = findInt(pivot.toDict()) - 1
-          #print("INDEX IS:", index, len(transitions))
-          #print(transitions)
-          
-
-          # print("Ayo 2", transitions[index][2].toDict())
-          if(index <= len(transitions) and transitions[index][2] != None): 
-               #in this case,  attach to the current regex to the accumulation because it has a transition to the accept state. 
-               acc = acc + arr[1] + "* "
-               print("Current regex: " + acc)
-          # printStateInfo(transitions)
-        #   No loops
-     if(arr == "Fail"):
-        #    In the case of failure you need to find the pointer to the next state
-           acc = acc + findNextTrans(pivot, currTrans)
-           
-           print("Current regex 2 " + acc)
-     
+     isLoop = idLoop(pivot, currTrans)
+    
+     newTrans = deleteStateInstance(states[1].name, transitions, states)
      del states[1]
      del transitions[1]
-     crushGNFA(states, transitions, acc)
+     print("NEW TRANS")
+     printStateInfo(newTrans)
+     crushGNFA(states, newTrans, acc)
 
 def findNextTrans(state, transition):
      arr = ['0', '1', 'None']
@@ -125,9 +109,34 @@ def findNextTrans(state, transition):
           if(findInt(transition[i].name) > currentStateInd):
                return arr[i]
      return "None"
-          
+
 def findInt(string):
+     if(re.search(r'\d+', string) == None):
+          return "None"
      return int(re.search(r'\d+', string).group())
+
+# Deletes all instances of a transition to the state being deleted in the transition table
+def deleteStateInstance(stateName, transitions, states):
+     newTrans = transitions
+     currentState = states[1]
+     # Replaces all instances of the state in the transition table unless its the start state
+     for i in range(len(newTrans)):
+          print("I is", i)
+          printStateInfo(newTrans)
+          for x in range(3):
+               if(newTrans[i][x] != "None"):
+                    print("First IF ", newTrans[i][x].name)
+                    if(transitions[i][x].name == stateName and i > 0):
+                         newTrans[i][x] = None
+                         
+                    if(newTrans[i][x].name == stateName and i == 0):
+                         newTrans[i][x] = "None"
+
+               elif(newTrans[i][x] == "None"):
+                    print("Second IF", newTrans[i][x])
+                    continue
+
+     return newTrans
 
 
 # These three functions are ABSOLUTELY ESSENTIAL TO GENERATING A REGEX FROM OUR CODE
@@ -157,7 +166,7 @@ def findIncoming(state, transitions):
           for x in range((3)):
                if(transitions[i][x] == None):
                     transitions[i][x] = "None"
-               elif(transitions[i][x].name == currStateName and (i != findInt(currStateName))):
+               elif(transitions[i][x] != "None" and transitions[i][x].name == currStateName and (i != findInt(currStateName))):
                     incoming.append(f"q_{i}")
                     if(x == 2):
                          indexes.append("E")
@@ -166,30 +175,54 @@ def findIncoming(state, transitions):
      finalArr.append(incoming)
      finalArr.append(indexes)
 
-     print(finalArr)
+#     print(finalArr)
      return finalArr
                
 def findOutgoing(state, transitions):
      currStateName = state.name
+     # print("find outgoing curr state name ", currStateName)
      finalArr = []
      outgoing = []
      indexes = []
      for i in range(3):
-          if(transitions[findInt(currStateName)][i].name != currStateName):
-               # outgoing.append(transitions[findInt(currStateName)][i].name)
-               if(i == 2):
-                         continue
-               else:
-                    outgoing.append(transitions[findInt(currStateName)][i].name)
-                    indexes.append(i)
+          if(findInt(currStateName) != "None"):
+               if(transitions[findInt(currStateName)][i] != "None" and transitions[findInt(currStateName)][i].name != currStateName):
+                    # outgoing.append(transitions[findInt(currStateName)][i].name)
+                    if(i == 2):
+                              indexes.append("E")
+                              continue
+                    else:
+                         outgoing.append(transitions[findInt(currStateName)][i].name)
+                         indexes.append(i)
+              
+               if(findInt(currStateName) == "None"):
+                    if(transitions[0][i] != "None" and transitions[0][i].name != currStateName):
+                         # outgoing.append(transitions[findInt(currStateName)][i].name)
+                         if(i == 2):
+                                   indexes.append("E")
+                                   continue
+                         else:
+                              outgoing.append(transitions[findInt(currStateName)][i].name)
+                              indexes.append(i)
      
      finalArr.append(outgoing)
      finalArr.append(indexes)
      
-     print(finalArr)
+     # print(finalArr)
      
      return finalArr
 
+# End of essential functions
+
+# This is used to fill out the origin and dest values of each state
+def fillInOut(transitions, states):
+     # print("Fill in out")
+     # print(states)
+     for i in range(len(states)):
+          states[i].origin = findIncoming(states[i], transitions)[1]
+          states[i].dest = findOutgoing(states[i], transitions)[1]
+     return
+     
 def main(): 
     #1: Get the input from the user
     substring = input("Enter the substring that should not appear:"); 
@@ -200,18 +233,30 @@ def main():
        # Build Transitions
        Transitions = Transition.buildTransitions(currentStates, substring) #returns an array of arrays where each index of the array is in the form [state to move if 0 is read, state to move to if 1 is read]4
        #build GNFA attaches a new start and accept state to the exiting dfa
+
+
        newGNFA = buildGNFA(currentStates, Transitions)
+     #   print("fml" ,newGNFA.states[1])
+
+       fillInOut(newGNFA.transitions, newGNFA.states)
+     #   print("Fill in out finished")
+     #   This returns the indexes (the values 0, 1, or E) that point to this state
+       for i in range(len(newGNFA.states)):
+           print(f"ORIGIN for {newGNFA.states[i].name}: ", newGNFA.states[i].origin)
+          #  print(f"LOOP for {newGNFA.states[i].name}: ", idLoop(newGNFA.states[i], newGNFA.transitions))
+           print(f"OUT for {newGNFA.states[i].name}: ", newGNFA.states[i].dest)
+           
        #this prints the current states and thier transitions       
        printStateInfo(newGNFA.transitions)
        #call crush GNFA -> this is where the resulting regex is printed
-       #crushGNFA(newGNFA.states, newGNFA.transitions, '')
+       crushGNFA(newGNFA.states, newGNFA.transitions, '')
 
      #   Checking parse transitions
-       print("Incoming")
-       findIncoming(newGNFA.states[1], newGNFA.transitions)
+     #   print("Incoming")
+     #   findIncoming(newGNFA.states[1], newGNFA.transitions)
 
-       print("Outgoing")
-       findOutgoing(newGNFA.states[1], newGNFA.transitions)
+     #   print("Outgoing")
+     #   findOutgoing(newGNFA.states[1], newGNFA.transitions)
     else: #the case that something other than 0 and 1 were added
         print("Invalid string!")
         return  #exit

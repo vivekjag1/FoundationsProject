@@ -15,6 +15,8 @@ class State:
     def toDict(self):
         if(self.name == None): 
             return "None"
+        if(self.name == None): 
+            return "None"
         else: 
             return self.name
 
