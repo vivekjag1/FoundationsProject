@@ -23,12 +23,9 @@ def makeDfa( substring):
         # for i in range(len(dfa.states)): 
         #     dfa.states[i].toDict()
         # print(substring)
-
         # print("\nTHIS IS THE TRANSITION FUNCTION")
         # allNewTransition = Transition.buildTransitions(dfa.states, substring)
-        return states 
-    
-
+        return states
 def buildGNFA(states, transitions):
     # Add new start state
     state = State((f"q_{0}"), True, False, [None], [states[1]])
@@ -85,11 +82,10 @@ def printStateInfo(allTransitions):
                      ind_3 = allTransitions[i][2].toDict()
                 print(f"q{i}        ",ind_1, ind_2, ind_3)
 
-
-        
 def crushGNFA(states, transitions):
      acc = ""
      if(len(states) == 2):
+         
           return "(" + acc + ")*"
      pivot = states[1]
      currTrans = transitions[1]
@@ -97,13 +93,13 @@ def crushGNFA(states, transitions):
     #  Has loops
      if(arr != "Fail"):
           acc = acc + arr[1] + "* "
-          print("Accumulate this shit asshole " + acc)
+          print("Current regex: " + acc)
         #   No loops
      if(arr == "Fail"):
         #    In the case of failure you need to find the pointer to the next state
            acc = acc + findNextTrans(pivot, currTrans)
            
-           print("Accumulate this shit asshole 2 " + acc)
+           print("Current regex 2 " + acc)
      
      del states[1]
      del transitions[1]
@@ -135,7 +131,8 @@ def findNextTrans(state, transition):
 
 def findInt(string):
      return int(re.search(r'\d+', string).group())
-     
+
+
 def main(): 
     #1: Get the input from the user
     substring = input("Enter the substring that should not appear:"); 
