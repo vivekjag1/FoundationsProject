@@ -150,12 +150,14 @@ def parseTransitions(state, transitions):
      for i in range(len(transitions)):
           # If not the current state and you find the current state name that means there is a transition to it
           # This is for incoming
-          for x in range(len(transitions[i])):
-               print(currStateName)
-               if(transitions[i][x] == currStateName ):
+          for x in range((3)):
+               if(transitions[i][x] == None):
+                    transitions[i][x] = "None"
+                    print("fml")
+               elif(transitions[i][x].name == currStateName and (i != findInt(currStateName))):
                     print("Here")
                     incoming.append(f"q_{i}")
-               
+     
      print("INCOMING: ", incoming)
 
      return "FUck"
@@ -178,6 +180,7 @@ def main():
        #crushGNFA(newGNFA.states, newGNFA.transitions, '')
 
      #   Checking parse transitions
+       
        parseTransitions(newGNFA.states[1], newGNFA.transitions)
     else: #the case that something other than 0 and 1 were added
         print("Invalid string!")

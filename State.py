@@ -13,7 +13,12 @@ class State:
         self.origin = origin
         self.dest = dest
     def toDict(self):
-        return self.name
+        if(self.name == None): 
+            return "None"
+        else: 
+            return self.name
+
+        
         
         # print("Is start?: ", self.isStart)
         # print("Is Accept?: ", self.isAccept)
