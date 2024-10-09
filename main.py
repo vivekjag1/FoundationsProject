@@ -24,6 +24,7 @@ def makeDfa( substring):
         # print("\nTHIS IS THE TRANSITION FUNCTION")
         # allNewTransition = Transition.buildTransitions(dfa.states, substring)
         return states
+
 def buildGNFA(states, transitions):
     # Add new start state
     state = State((f"q_{0}"), True, False, [None], [states[1]])
@@ -64,7 +65,6 @@ def buildGNFA(states, transitions):
         #       transitions[i].append(None)
     retGNFA = GNFA(states, transitions)
     return retGNFA
-
         
 def printStateInfo(allTransitions):
     print("Curr State  |  0  |   1  |  E  ")
@@ -131,7 +131,6 @@ def idLoop(state, transition):
                return arrFinal
      return "Fail"
 
-
 def findNextTrans(state, transition):
      arr = ['0', '1', 'None']
      currentStateInd = findInt(state.name)
@@ -140,10 +139,27 @@ def findNextTrans(state, transition):
                return arr[i]
      return "None"
           
-
 def findInt(string):
      return int(re.search(r'\d+', string).group())
 
+def parseTransitions(state, transitions):
+     currStateName = state.name
+     finalArr = []
+     incoming = []
+
+     for i in range(len(transitions)):
+          # If not the current state and you find the current state name that means there is a transition to it
+          # This is for incoming
+          for x in range(len(transitions[i])):
+               print(currStateName)
+               if(transitions[i][x] == currStateName ):
+                    print("Here")
+                    incoming.append(f"q_{i}")
+               
+     print("INCOMING: ", incoming)
+
+     return "FUck"
+               
 
 def main(): 
     #1: Get the input from the user
@@ -159,7 +175,10 @@ def main():
        #this prints the current states and thier transitions       
        printStateInfo(newGNFA.transitions)
        #call crush GNFA -> this is where the resulting regex is printed
-       crushGNFA(newGNFA.states, newGNFA.transitions, '')
+       #crushGNFA(newGNFA.states, newGNFA.transitions, '')
+
+     #   Checking parse transitions
+       parseTransitions(newGNFA.states[1], newGNFA.transitions)
     else: #the case that something other than 0 and 1 were added
         print("Invalid string!")
         return  #exit
