@@ -82,18 +82,32 @@ def printStateInfo(allTransitions):
                      ind_3 = allTransitions[i][2].toDict()
                 print(f"q{i}        ",ind_1, ind_2, ind_3)
 
-def crushGNFA(states, transitions):
-     acc = ""
+def crushGNFA(states, transitions, acc):
+     
      if(len(states) == 2):
+          string = "(" + acc + ")*"
+          print("final: ", string)
+          return string
          
-          return "(" + acc + ")*"
+           
      pivot = states[1]
      currTrans = transitions[1]
      arr = idLoop(pivot, currTrans)
     #  Has loops
      if(arr != "Fail"):
-          acc = acc + arr[1] + "* "
-          print("Current regex: " + acc)
+          #need to check if the current state has a transition to an accept state 
+         
+          index = findInt(pivot.toDict()) - 1
+          print("INDEX IS:", index, len(transitions))
+          print(transitions)
+          
+
+          # print("Ayo 2", transitions[index][2].toDict())
+          if(transitions[index][2] != None): 
+               #in this case,  attach to the current regex to the accumulation because it has a transition to the accept state. 
+               acc = acc + arr[1] + "* "
+               print("Current regex: " + acc)
+          printStateInfo(transitions)
         #   No loops
      if(arr == "Fail"):
         #    In the case of failure you need to find the pointer to the next state
@@ -103,7 +117,7 @@ def crushGNFA(states, transitions):
      
      del states[1]
      del transitions[1]
-     crushGNFA(states, transitions)
+     crushGNFA(states, transitions, acc)
 
 def idLoop(state, transition):
      arr = ["0", "1", "E"]
@@ -126,7 +140,7 @@ def findNextTrans(state, transition):
      for i in range(len(transition)):
           if(findInt(transition[i].name) > currentStateInd):
                return arr[i]
-     return "Nah"
+     return "None"
           
 
 def findInt(string):
@@ -146,8 +160,8 @@ def main():
        newGNFA = buildGNFA(currentStates, Transitions)
        #this prints the current states and thier transitions       
        printStateInfo(newGNFA.transitions)
-
-       crushGNFA(newGNFA.states, newGNFA.transitions)
+       #call crush GNFA -> this is where the resulting regex is printed
+       crushGNFA(newGNFA.states, newGNFA.transitions, '')
     else: #the case that something other than 0 and 1 were added
         print("Invalid string!")
         return  #exit
