@@ -82,11 +82,12 @@ def printStateInfo(allTransitions):
                      ind_3 = allTransitions[i][2].toDict()
                 print(f"q{i}        ",ind_1, ind_2, ind_3)
 
-def crushGNFA(states, transitions):
-     acc = ""
+def crushGNFA(states, transitions, acc):
      if(len(states) == 2):
+         str = "(" + acc + ")*"
+         print(str)
+         return str
          
-          return "(" + acc + ")*"
      pivot = states[1]
      currTrans = transitions[1]
      arr = idLoop(pivot, currTrans)
@@ -103,7 +104,7 @@ def crushGNFA(states, transitions):
      
      del states[1]
      del transitions[1]
-     crushGNFA(states, transitions)
+     crushGNFA(states, transitions, acc)
 
 def idLoop(state, transition):
      arr = ["0", "1", "E"]
@@ -147,7 +148,7 @@ def main():
        #this prints the current states and thier transitions       
        printStateInfo(newGNFA.transitions)
 
-       crushGNFA(newGNFA.states, newGNFA.transitions)
+       crushGNFA(newGNFA.states, newGNFA.transitions, '')
     else: #the case that something other than 0 and 1 were added
         print("Invalid string!")
         return  #exit
