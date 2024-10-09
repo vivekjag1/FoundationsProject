@@ -17,8 +17,6 @@ def makeDfa( substring):
 
         dfa = DFA(states)
         dfa.invertDFA()
-
-        print(len(dfa.states))
         # dfa.invertDFA()
         # for i in range(len(dfa.states)): 
         #     dfa.states[i].toDict()
@@ -58,7 +56,7 @@ def buildGNFA(states, transitions):
               transitions[i].append(None)
     
          if(thisState.isAccept):
-              print("At state at index", i)
+              #print("At state at index", i)
               thisState.isAccept=False
               transitions[i].append(newAccept)
               
@@ -98,12 +96,12 @@ def crushGNFA(states, transitions, acc):
           #need to check if the current state has a transition to an accept state 
          
           index = findInt(pivot.toDict()) - 1
-          print("INDEX IS:", index, len(transitions))
-          print(transitions)
+          #print("INDEX IS:", index, len(transitions))
+          #print(transitions)
           
 
           # print("Ayo 2", transitions[index][2].toDict())
-          if(transitions[index][2] != None): 
+          if(index <= len(transitions) and transitions[index][2] != None): 
                #in this case,  attach to the current regex to the accumulation because it has a transition to the accept state. 
                acc = acc + arr[1] + "* "
                print("Current regex: " + acc)
