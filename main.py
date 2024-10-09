@@ -4,6 +4,8 @@ from Transition import Transition
 from Transition import printThings
 from GNFA import GNFA
 import re
+
+
 def makeDfa( substring):
         numStates = len(substring) + 1
         states = []
@@ -51,7 +53,7 @@ def buildGNFA(states, transitions):
     for i in range(len(states) - 1): 
          
          thisState = states[i]
-         print(i, "accept: ", thisState.isAccept)
+     #     print(i, "accept: ", thisState.isAccept)
 
          if(not thisState.isAccept and (not thisState.isStart)): 
               transitions[i].append(None)
@@ -94,7 +96,6 @@ def crushGNFA(states, transitions, acc):
     #  Has loops
      if(arr != "Fail"):
           #need to check if the current state has a transition to an accept state 
-         
           index = findInt(pivot.toDict()) - 1
           #print("INDEX IS:", index, len(transitions))
           #print(transitions)
@@ -105,7 +106,7 @@ def crushGNFA(states, transitions, acc):
                #in this case,  attach to the current regex to the accumulation because it has a transition to the accept state. 
                acc = acc + arr[1] + "* "
                print("Current regex: " + acc)
-          printStateInfo(transitions)
+          # printStateInfo(transitions)
         #   No loops
      if(arr == "Fail"):
         #    In the case of failure you need to find the pointer to the next state
@@ -117,6 +118,19 @@ def crushGNFA(states, transitions, acc):
      del transitions[1]
      crushGNFA(states, transitions, acc)
 
+def findNextTrans(state, transition):
+     arr = ['0', '1', 'None']
+     currentStateInd = findInt(state.name)
+     for i in range(len(transition)):
+          if(findInt(transition[i].name) > currentStateInd):
+               return arr[i]
+     return "None"
+          
+def findInt(string):
+     return int(re.search(r'\d+', string).group())
+
+
+# These three functions are ABSOLUTELY ESSENTIAL TO GENERATING A REGEX FROM OUR CODE
 def idLoop(state, transition):
      arr = ["0", "1", "E"]
      arrFinal = []
@@ -131,37 +145,50 @@ def idLoop(state, transition):
                return arrFinal
      return "Fail"
 
-def findNextTrans(state, transition):
-     arr = ['0', '1', 'None']
-     currentStateInd = findInt(state.name)
-     for i in range(len(transition)):
-          if(findInt(transition[i].name) > currentStateInd):
-               return arr[i]
-     return "None"
-          
-def findInt(string):
-     return int(re.search(r'\d+', string).group())
-
-def parseTransitions(state, transitions):
+def findIncoming(state, transitions):
      currStateName = state.name
      finalArr = []
      incoming = []
+     indexes = []
 
      for i in range(len(transitions)):
           # If not the current state and you find the current state name that means there is a transition to it
-          # This is for incoming
+          # This is for incoming finding which states transition to the current state
           for x in range((3)):
                if(transitions[i][x] == None):
                     transitions[i][x] = "None"
-                    print("fml")
                elif(transitions[i][x].name == currStateName and (i != findInt(currStateName))):
-                    print("Here")
                     incoming.append(f"q_{i}")
-     
-     print("INCOMING: ", incoming)
+                    if(x == 2):
+                         indexes.append("E")
+                    else:
+                         indexes.append(x)
+     finalArr.append(incoming)
+     finalArr.append(indexes)
 
-     return "FUck"
+     print(finalArr)
+     return finalArr
                
+def findOutgoing(state, transitions):
+     currStateName = state.name
+     finalArr = []
+     outgoing = []
+     indexes = []
+     for i in range(3):
+          if(transitions[findInt(currStateName)][i].name != currStateName):
+               # outgoing.append(transitions[findInt(currStateName)][i].name)
+               if(i == 2):
+                         continue
+               else:
+                    outgoing.append(transitions[findInt(currStateName)][i].name)
+                    indexes.append(i)
+     
+     finalArr.append(outgoing)
+     finalArr.append(indexes)
+     
+     print(finalArr)
+     
+     return finalArr
 
 def main(): 
     #1: Get the input from the user
@@ -180,8 +207,11 @@ def main():
        #crushGNFA(newGNFA.states, newGNFA.transitions, '')
 
      #   Checking parse transitions
-       
-       parseTransitions(newGNFA.states[1], newGNFA.transitions)
+       print("Incoming")
+       findIncoming(newGNFA.states[1], newGNFA.transitions)
+
+       print("Outgoing")
+       findOutgoing(newGNFA.states[1], newGNFA.transitions)
     else: #the case that something other than 0 and 1 were added
         print("Invalid string!")
         return  #exit
