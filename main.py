@@ -126,14 +126,18 @@ def deleteStateInstance(stateName, transitions, states):
           for x in range(3):
                if(newTrans[i][x] != "None"):
                     print("First IF ", newTrans[i][x].name)
-                    if(transitions[i][x].name == stateName and i > 0):
-                         newTrans[i][x] = None
-                         
-                    if(newTrans[i][x].name == stateName and i == 0):
+                    print(vars(newTrans[i][x]), i)
+                    if(i == 0 and newTrans[i][x].name == stateName):
                          newTrans[i][x] = "None"
+                         
+                    elif(i > 0 and newTrans[i][x].name == stateName):
+                         newTrans[i][x] = "None"
+                         
+                    
 
                elif(newTrans[i][x] == "None"):
                     print("Second IF", newTrans[i][x])
+
                     continue
 
      return newTrans
@@ -146,7 +150,8 @@ def idLoop(state, transition):
      currName = state.name
     #  print("Current Name", currName)
      for i in range(len(transition)):
-        #   print("I hate lfe", currName, transition[i].name)
+          print("I hate lfe ", transition[i].name)
+          print(type(transition[i]))
           if(currName == transition[i].name):
             #    print("Transition index ", transition[i].name)
                arrFinal.append(currName)
