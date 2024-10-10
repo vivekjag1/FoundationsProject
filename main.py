@@ -5,6 +5,7 @@ from Transition import printThings
 from GNFA import GNFA
 import re
 
+acc = ""
 
 def makeDfa( substring):
         numStates = len(substring) + 1
@@ -83,24 +84,45 @@ def printStateInfo(allTransitions):
                      ind_3 = allTransitions[i][2].toDict()
                 print(f"q{i}        ",ind_1, ind_2, ind_3)
 
-def crushGNFA(states, transitions, acc):
-     
-     if(len(states) == 2):
-          string = "(" + acc + ")*"
-          print("final: ", string)
-          return string
-         
-           
-     pivot = states[1]
-     currTrans = transitions[1]
-     isLoop = idLoop(pivot, currTrans)
-    
-     newTrans = deleteStateInstance(states[1].name, transitions, states)
-     del states[1]
-     del transitions[1]
-     print("NEW TRANS")
-     printStateInfo(newTrans)
-     crushGNFA(states, newTrans, acc)
+
+def crushGNFA(states, transitions, length):
+     accum = ""
+     while(len(states) != 2):
+          pivot = states[1]
+          currTrans = transitions[1]
+          isLoop = idLoop(pivot, currTrans)
+          if(length != len(states)):
+               pivot.origin = [accum]
+          begin = "(" + parseFunc(pivot.origin) + ")"
+          looper = ""
+          if(idLoop(states[1], transitions[1]) != []):
+               print(idLoop(states[1], transitions[1]))
+               send = []
+               send.append(idLoop(pivot, currTrans)[1])
+               looper = "(" + parseFunc(send) + "*" + ")"
+          else:
+               looper = ""
+          
+          end = "(" + parseFunc(states[1].dest) + ")"
+          
+          accum = "(" + begin + looper + end + ")" + "U"
+          newTrans = deleteStateInstance(states[1].name, transitions, states).copy()
+          
+          print("ACCUM IS : ", accum)
+          del states[1]
+          del transitions[1]
+          # print("NEW TRANS")
+          printStateInfo(newTrans)
+     print("ACCUM IS : ", accum[:-1])
+     return "Final: " + accum[-1]
+
+def parseFunc(arr):
+     final_string = ""
+     for i in range(len(arr)):
+          final_string += "U" + str(arr[i])
+     # final_string[0] = ""
+     # print(final_string)
+     return final_string.replace("U", "", 1)
 
 def findNextTrans(state, transition):
      arr = ['0', '1', 'None']
@@ -118,30 +140,20 @@ def findInt(string):
 # Deletes all instances of a transition to the state being deleted in the transition table
 def deleteStateInstance(stateName, transitions, states):
      newTrans = transitions.copy()
-     currentState = states[1]
      # Replaces all instances of the state in the transition table unless its the start state
      for i in range(len(newTrans)):
-          # print("I is", i)
-          printStateInfo(newTrans)
           for x in range(3):
                if(newTrans[i][x] != "None"):
-                    # print("First IF ", newTrans[i][x].name)
-                    # print(vars(newTrans[i][x]), i)
                     if(i == 0 and newTrans[i][x].name == stateName):
                          newTrans[i][x] = states[i + 2]
                          
                     elif(i > 0 and newTrans[i][x].name == stateName):
-                         newTrans[i][x] = "None"
-                         
-                    
+                         newTrans[i][x] = "None"  
 
                elif(newTrans[i][x] == "None"):
-                    print("Second IF", newTrans[i][x])
-
                     continue
 
      return newTrans
-
 
 # These three functions are ABSOLUTELY ESSENTIAL TO GENERATING A REGEX FROM OUR CODE
 def idLoop(state, transition):
@@ -151,14 +163,14 @@ def idLoop(state, transition):
     #  print("Current Name", currName)
      for i in range(3):
           # print("I hate lfe ", transition[i].name")
-          print(f"transition {i} is {transition[i]}")
+          # print(f"transition {i} is {transition[i]}")
           
           if(transition[i] != "None" and currName == transition[i].name):
             #    print("Transition index ", transition[i].name)
                arrFinal.append(currName)
-               arrFinal.append(arr[i])
+               arrFinal.append(arr[i]) #Need this
                return arrFinal
-     return "Fail"
+     return []
 
 def findIncoming(state, transitions):
      currStateName = state.name
@@ -170,6 +182,7 @@ def findIncoming(state, transitions):
           # If not the current state and you find the current state name that means there is a transition to it
           # This is for incoming finding which states transition to the current state
           for x in range((3)):
+               
                if(transitions[i][x] == None):
                     transitions[i][x] = "None"
                elif(transitions[i][x] != "None" and transitions[i][x].name == currStateName and (i != findInt(currStateName))):
@@ -255,7 +268,7 @@ def main():
        #this prints the current states and thier transitions       
        printStateInfo(newGNFA.transitions)
        #call crush GNFA -> this is where the resulting regex is printed
-       crushGNFA(newGNFA.states, newGNFA.transitions, '')
+       return crushGNFA(newGNFA.states, newGNFA.transitions, len(newGNFA.states))
 
      #   Checking parse transitions
      #   print("Incoming")
