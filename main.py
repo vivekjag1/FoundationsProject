@@ -95,9 +95,9 @@ def crushGNFA(states, transitions, length):
           begin = "(" + parseFunc(pivot.origin) + ")"
           looper = ""
           if(idLoop(states[1], transitions[1]) != []):
-               print(idLoop(states[1], transitions[1]))
+               # print(isLoop)
                send = []
-               send.append(idLoop(pivot, currTrans)[1])
+               send.append(isLoop[1])
                looper = "(" + parseFunc(send) + "*" + ")"
           else:
                looper = ""
@@ -107,13 +107,14 @@ def crushGNFA(states, transitions, length):
           accum = "(" + begin + looper + end + ")" + "U"
           newTrans = deleteStateInstance(states[1].name, transitions, states).copy()
           
-          print("ACCUM IS : ", accum)
+          # print("ACCUM IS : ", accum)
           del states[1]
           del transitions[1]
           # print("NEW TRANS")
-          printStateInfo(newTrans)
-     print("ACCUM IS : ", accum[:-1])
-     return "Final: " + accum[-1]
+          # printStateInfo(newTrans)
+     accum = "(" + accum[:-1] + ")*"
+     print("ACCUM IS : ", accum)
+     return "Final: " + "(" + accum[:-1] + ")*"
 
 def parseFunc(arr):
      final_string = ""
@@ -251,19 +252,8 @@ def main():
        # Build Transitions
        Transitions = Transition.buildTransitions(currentStates, substring) #returns an array of arrays where each index of the array is in the form [state to move if 0 is read, state to move to if 1 is read]4
        #build GNFA attaches a new start and accept state to the exiting dfa
-
-
        newGNFA = buildGNFA(currentStates, Transitions)
-     #   print("fml" ,newGNFA.states[1])
-
        fillInOut(newGNFA.transitions, newGNFA.states)
-     #   print("Fill in out finished")
-     #   This returns the indexes (the values 0, 1, or E) that point to this state
-       for i in range(len(newGNFA.states)):
-           print(f"ORIGIN for {newGNFA.states[i].name}: ", newGNFA.states[i].origin)
-          #  print(f"LOOP for {newGNFA.states[i].name}: ", idLoop(newGNFA.states[i], newGNFA.transitions))
-           print(f"OUT for {newGNFA.states[i].name}: ", newGNFA.states[i].dest)
-           
        #this prints the current states and thier transitions       
        printStateInfo(newGNFA.transitions)
        #call crush GNFA -> this is where the resulting regex is printed
