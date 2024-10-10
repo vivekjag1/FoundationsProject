@@ -84,7 +84,6 @@ def printStateInfo(allTransitions):
                      ind_3 = allTransitions[i][2].toDict()
                 print(f"q{i}        ",ind_1, ind_2, ind_3)
 
-
 def crushGNFA(states, transitions, length):
      accum = ""
      while(len(states) != 2):
@@ -273,9 +272,6 @@ def main():
      #   Checking parse transitions
      #   print("Incoming")
      #   findIncoming(newGNFA.states[1], newGNFA.transitions)
-
-     #   print("Outgoing")
-     #   findOutgoing(newGNFA.states[1], newGNFA.transitions)
     else: #the case that something other than 0 and 1 were added
         print("Invalid string!")
         return  #exit
