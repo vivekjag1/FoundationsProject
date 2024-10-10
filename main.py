@@ -117,18 +117,18 @@ def findInt(string):
 
 # Deletes all instances of a transition to the state being deleted in the transition table
 def deleteStateInstance(stateName, transitions, states):
-     newTrans = transitions
+     newTrans = transitions.copy()
      currentState = states[1]
      # Replaces all instances of the state in the transition table unless its the start state
      for i in range(len(newTrans)):
-          print("I is", i)
+          # print("I is", i)
           printStateInfo(newTrans)
           for x in range(3):
                if(newTrans[i][x] != "None"):
-                    print("First IF ", newTrans[i][x].name)
-                    print(vars(newTrans[i][x]), i)
+                    # print("First IF ", newTrans[i][x].name)
+                    # print(vars(newTrans[i][x]), i)
                     if(i == 0 and newTrans[i][x].name == stateName):
-                         newTrans[i][x] = "None"
+                         newTrans[i][x] = states[i + 2]
                          
                     elif(i > 0 and newTrans[i][x].name == stateName):
                          newTrans[i][x] = "None"
@@ -149,10 +149,11 @@ def idLoop(state, transition):
      arrFinal = []
      currName = state.name
     #  print("Current Name", currName)
-     for i in range(len(transition)):
-          print("I hate lfe ", transition[i].name)
-          print(type(transition[i]))
-          if(currName == transition[i].name):
+     for i in range(3):
+          # print("I hate lfe ", transition[i].name")
+          print(f"transition {i} is {transition[i]}")
+          
+          if(transition[i] != "None" and currName == transition[i].name):
             #    print("Transition index ", transition[i].name)
                arrFinal.append(currName)
                arrFinal.append(arr[i])
